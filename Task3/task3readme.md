@@ -122,13 +122,57 @@ Used for register-based arithmetic/logical operations.
 
 ---
 
-## 🧮 I-Type Instructions
+# RISC-V Instruction Formats
 
-Covers immediate arithmetic, loads, and control operations.
+## I-Type Instructions
 
-**Immediate Extraction:**
+Used for immediate arithmetic, load operations, and certain control flow instructions.
 
-Immediate = bits `[31:20]`
+### Example: `ADDI rd, rs1, imm`
+
+- **opcode**: `0010011` (for immediate arithmetic operations)  
+- **funct3**: `000` (for ADDI)  
+- **imm**: Immediate value  
+- **rs1**: Source register 1  
+- **rd**: Destination register  
+
+---
+
+## S-Type Instructions
+
+Used for store operations.
+
+### Example: `SW rs2, imm(rs1)`
+
+- **opcode**: `0100011` (for store operations)  
+- **funct3**: `010` (for SW)  
+- **imm**: Immediate value (split into `imm[11:5]` and `imm[4:0]`)  
+- **rs1**: Base address register  
+- **rs2**: Source register to be stored  
+
+---
+
+## B-Type Instructions
+
+Used for branch operations.
+
+### Example: `BEQ rs1, rs2, imm`
+
+- **opcode**: `1100011` (for branch operations)  
+- **funct3**: `000` (for BEQ)  
+- **imm**: Immediate value (split into `imm[12]`, `imm[10:5]`, `imm[4:1]`, `imm[11]`)  
+- **rs1**: Source register 1  
+- **rs2**: Source register 2  
+
+---
+
+## U-Type Instructions
+
+Used for operations like loading upper immediate (`LUI`) and adding upper immediate to PC (`AUIPC`).
+
+### Extracting Immediate Value
+
+The immediate value in U-Type instructions spans bits `[31:12]`.
 
 ```c
-uint32_t imm_i = (instruction & 0xFFF00000) >> 20;
+uint32_t imm_u = instruction & 0xFFFFF000;
